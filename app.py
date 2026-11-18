@@ -12,12 +12,20 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# 2. Estilos CSS personalizados (Estética Agritech Dark / Emerald)
+# 2. Estilos CSS de alto contraste (Estética Agritech Dark / Emerald)
 st.markdown("""
 <style>
-    /* Fondo general y tipografía */
-    .stApp {
-        background-color: #0b1310;
+    /* Fondo general y encabezado superior */
+    .stApp, [data-testid="stAppViewContainer"] {
+        background-color: #0b1310 !important;
+        color: #e6f0ec !important;
+    }
+    header[data-testid="stHeader"] {
+        background-color: #0b1310 !important;
+        color: #e6f0ec !important;
+    }
+    /* Fuerza texto claro en etiquetas y párrafos */
+    .stApp p, .stApp span, .stApp label, .stApp div, .stMarkdown {
         color: #e6f0ec;
     }
     /* Banner superior */
@@ -31,26 +39,45 @@ st.markdown("""
     }
     .hero-badge {
         display: inline-block;
-        background-color: rgba(46, 204, 113, 0.16);
-        color: #2ecc71;
-        border: 1px solid rgba(46, 204, 113, 0.4);
+        background-color: rgba(46, 204, 113, 0.18);
+        color: #2ecc71 !important;
+        border: 1px solid rgba(46, 204, 113, 0.45);
         padding: 4px 12px;
         border-radius: 20px;
         font-size: 0.78rem;
-        font-weight: 600;
+        font-weight: 700;
         letter-spacing: 0.6px;
         margin-bottom: 10px;
     }
     .hero-title {
         font-size: 2rem;
         font-weight: 800;
-        color: #ffffff;
+        color: #ffffff !important;
         margin: 0 0 6px 0;
     }
     .hero-subtitle {
         font-size: 1rem;
-        color: #a9c7bc;
+        color: #cbe3da !important;
         margin: 0;
+    }
+    /* Sidebar de alto contraste */
+    section[data-testid="stSidebar"] {
+        background-color: #0e1814 !important;
+        border-right: 1px solid #1d352c;
+    }
+    section[data-testid="stSidebar"] h1,
+    section[data-testid="stSidebar"] h2,
+    section[data-testid="stSidebar"] h3 {
+        color: #ffffff !important;
+    }
+    section[data-testid="stSidebar"] p,
+    section[data-testid="stSidebar"] span,
+    section[data-testid="stSidebar"] label,
+    section[data-testid="stSidebar"] li {
+        color: #d8ebe3 !important;
+    }
+    section[data-testid="stSidebar"] [data-testid="stCaptionContainer"] p {
+        color: #9ec2b4 !important;
     }
     /* Tarjetas KPI */
     .kpi-card {
@@ -68,31 +95,63 @@ st.markdown("""
         font-size: 0.82rem;
         text-transform: uppercase;
         letter-spacing: 0.8px;
-        color: #8fb3a5;
+        color: #a9c9bc !important;
         margin-bottom: 6px;
     }
     .kpi-value {
         font-size: 1.85rem;
         font-weight: 700;
-        color: #ffffff;
+        color: #ffffff !important;
         line-height: 1.15;
     }
     .kpi-sub {
         font-size: 0.82rem;
-        color: #7ea194;
+        color: #94b8aa !important;
         margin-top: 6px;
     }
-    /* Sidebar */
-    section[data-testid="stSidebar"] {
-        background-color: #0e1814;
-        border-right: 1px solid #1d352c;
-    }
-    /* Caja de subida */
+    /* Caja de subida de archivos (File Uploader) */
     div[data-testid="stFileUploader"] {
-        background-color: #111d18;
+        background-color: #111d18 !important;
         border: 1px dashed #2e6f56;
         border-radius: 12px;
-        padding: 12px;
+        padding: 14px;
+    }
+    div[data-testid="stFileUploader"] section {
+        background-color: #162620 !important;
+        border-radius: 10px;
+        border: 1px solid #264d3e;
+    }
+    div[data-testid="stFileUploader"] span,
+    div[data-testid="stFileUploader"] small,
+    div[data-testid="stFileUploader"] label {
+        color: #e6f0ec !important;
+    }
+    div[data-testid="stFileUploader"] button {
+        background-color: #2ecc71 !important;
+        color: #0b1310 !important;
+        font-weight: 700 !important;
+        border: none !important;
+    }
+    /* Botón de demostración */
+    div[data-testid="stButton"] button {
+        background-color: #163d2f !important;
+        color: #ffffff !important;
+        border: 1px solid #2ecc71 !important;
+        border-radius: 10px;
+        font-weight: 600;
+        padding: 0.55rem 1rem;
+    }
+    div[data-testid="stButton"] button:hover {
+        background-color: #2ecc71 !important;
+        color: #0b1310 !important;
+    }
+    /* Pestañas */
+    button[data-baseweb="tab"] p {
+        color: #cbe3da !important;
+        font-weight: 600;
+    }
+    button[data-baseweb="tab"][aria-selected="true"] p {
+        color: #2ecc71 !important;
     }
 </style>
 """, unsafe_allow_html=True)
