@@ -10,7 +10,7 @@
 ![Grafana](https://img.shields.io/badge/Monitoring-Grafana%20Cloud-F46800?style=for-the-badge&logo=grafana&logoColor=white)
 ![Streamlit](https://img.shields.io/badge/Analytics-Streamlit%20Cloud-FF4B4B?style=for-the-badge&logo=streamlit&logoColor=white)
 
-🔗 **[Ver Simulación en Wokwi](PEGA_AQUI_TU_ENLACE_DE_WOKWI)** · 📊 **[Abrir App Analítica en Streamlit](PEGA_AQUI_TU_ENLACE_DE_STREAMLIT)**
+🔗 **[Ver Simulación en Wokwi](https://wokwi.com/projects/480982539043131393)** · 📊 **[Abrir App Analítica en Streamlit](https://invernadero-iot-final-5c6d5p2xvnfenrrn3xtbqx.streamlit.app/)**
 
 </div>
 
