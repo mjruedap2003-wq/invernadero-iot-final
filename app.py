@@ -356,4 +356,91 @@ with tab1:
     ax2.set_ylabel("Humedad (%)", fontweight="bold")
     ax2.set_xlabel("Marca de Tiempo (UTC)", fontweight="bold")
     ax2.set_title("Comportamiento Hídrico y Banda Ideal", loc="left", fontsize=11, fontweight="bold", pad=10)
-    ax2.legend(loc="upper right", frameon=True, facecolor="#0e1814", edgecolor="#264
+    ax2.legend(loc="upper right", frameon=True, facecolor="#0e1814", edgecolor="#26473a")
+    ax2.grid(True)
+
+    plt.tight_layout()
+    st.pyplot(fig)
+
+with tab2:
+    c_izq, c_der = st.columns([1, 1.4])
+    with c_izq:
+        st.markdown("#### Distribución de Estados")
+        resumen = df["estado"].value_counts().reset_index()
+        resumen.columns = ["Diagnóstico", "Cantidad"]
+        resumen["Porcentaje (%)"] = (resumen["Cantidad"] / len(df) * 100).round(1)
+        st.dataframe(resumen, use_container_width=True, hide_index=True)
+
+        fig_bar, ax_b = plt.subplots(figsize=(5.5, 3.6))
+        paleta = {
+            "Óptimo": "#2ecc71",
+            "Alerta Temperatura": "#ff6b6b",
+            "Alerta Humedad": "#4dabf7",
+            "Crítico (Temp + Hum)": "#feca57"
+        }
+        colores = [paleta.get(x, "#95a5a6") for x in resumen["Diagnóstico"]]
+        ax_b.barh(resumen["Diagnóstico"], resumen["Cantidad"], color=colores, height=0.55)
+        ax_b.set_xlabel("Número de Registros")
+        ax_b.grid(True, axis="x")
+        plt.tight_layout()
+        st.pyplot(fig_bar)
+
+    with c_der:
+        st.markdown("#### Eventos Fuera de Rango Detectados")
+        anomalias = df[df["estado"] != "Óptimo"]
+        if anomalias.empty:
+            st.success("🎉 ¡Excelente! Todas las lecturas registradas se mantuvieron dentro de los rangos ideales del invernadero.")
+        else:
+            st.warning(f"⚠️ Se identificaron **{len(anomalias)}** mediciones que superaron los límites establecidos.")
+            cols_ver = [c for c in ["timestamp", "temperatura", "humedad", "ventilacion", "estado"] if c in anomalias.columns]
+            st.dataframe(anomalias[cols_ver].tail(15), use_container_width=True, hide_index=True)
+
+with tab3:
+    corr_val = df["temperatura"].corr(df["humedad"])
+    c_m1, c_m2 = st.columns([1.4, 1])
+    with c_m1:
+        fig_sc, ax_s = plt.subplots(figsize=(7, 4.6))
+        paleta_sc = {
+            "Óptimo": "#2ecc71",
+            "Alerta Temperatura": "#ff6b6b",
+            "Alerta Humedad": "#4dabf7",
+            "Crítico (Temp + Hum)": "#feca57"
+        }
+        sns.scatterplot(
+            data=df, x="temperatura", y="humedad",
+            hue="estado", palette=paleta_sc, s=75, edgecolor="#0b1310", linewidth=0.6, ax=ax_s
+        )
+        ax_s.axvspan(temp_min, temp_max, color="#2ecc71", alpha=0.07)
+        ax_s.axhspan(hum_min, hum_max, color="#2ecc71", alpha=0.07)
+        ax_s.set_xlabel("Temperatura Ambiental (°C)", fontweight="bold")
+        ax_s.set_ylabel("Humedad Relativa (%)", fontweight="bold")
+        ax_s.set_title("Mapa de Dispersión Temperatura vs. Humedad", loc="left", fontweight="bold")
+        ax_s.legend(title="Estado", facecolor="#0e1814", edgecolor="#26473a")
+        ax_s.grid(True)
+        plt.tight_layout()
+        st.pyplot(fig_sc)
+
+    with c_m2:
+        st.markdown("#### Interpretación Física")
+        st.metric("Coeficiente de Pearson (r)", f"{corr_val:.3f}")
+        if corr_val < -0.4:
+            st.info("📉 **Correlación inversa moderada/fuerte:** Al aumentar la temperatura dentro del invernadero, la humedad relativa tiende a descender (comportamiento psicrométrico esperado).")
+        elif corr_val > 0.4:
+            st.info("📈 **Correlación directa:** Ambas variables aumentaron o disminuyeron simultáneamente durante el periodo registrado.")
+        else:
+            st.info("⚖️ **Correlación débil/independiente:** Las variaciones de temperatura y humedad operaron de forma desacoplada o regulada por la ventilación.")
+
+        st.markdown("#### Estadística Descriptiva")
+        cols_num = [c for c in ["temperatura", "humedad", "ventilacion"] if c in df.columns]
+        st.dataframe(df[cols_num].describe().round(2), use_container_width=True)
+
+with tab4:
+    st.markdown("#### Historial Completo Procesado")
+    st.dataframe(df, use_container_width=True, hide_index=True)
+    csv_limpio = df.to_csv(index=False).encode("utf-8")
+    st.download_button(
+        "⬇️ Descargar dataset procesado (.csv)",
+        data=csv_limpio,
+        file_name="invernadero_analizado.csv",
+        mime="text/csv"
+    )
