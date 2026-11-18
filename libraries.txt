@@ -1,1 +1,7 @@
-
+PubSubClient
+DHT sensor library
+Adafruit Unified Sensor
+ESP32Servo
+LiquidCrystal I2C
+ArduinoJson
+ESP8266 Influxdb
